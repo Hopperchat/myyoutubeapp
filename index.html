@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <ol id="message-container"></ol>
+  <input id="message-input">
+  <button id="send-message">Send Message</button>
+  <button id="delete-messages">Delete All</button>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+    import { getDatabase, ref, set, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDTonGEjG4EoKGElsDo8X9SrivdJxTMGBQ",
+      authDomain: "mychatapp-35af5.firebaseapp.com",
+      projectId: "mychatapp-35af5",
+      storageBucket: "mychatapp-35af5.appspot.com",
+      messagingSenderId: "339681668619",
+      appId: "1:339681668619:web:9277bd3bb3831d33b7a10e"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    const container = document.getElementById('message-container');
+    const input = document.getElementById("message-input");
+    const send = document.getElementById("send-message");
+
+    send.addEventListener("click", () => {
+      const text = input.value;
+      input.value = "";
+
+      const key = push(ref(database, "chat_one")).key;
+      set(ref(database, "chat_one/" + key), {
+        content: text
+      });
+    });
+
+    onChildAdded(ref(database, "chat_one"), (child) => {
+      const li = document.createElement("li");
+      li.textContent = child.val().content;
+      container.append(li);
+    });
+
+
+    const button2 = document.getElementById("delete-messages");
+    button2.addEventListener("click", () => {
+      set(ref(database, "chat_one"), null);
+    });
+  </script>
+</body>
+</html>
