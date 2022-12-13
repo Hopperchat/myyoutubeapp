@@ -7,60 +7,50 @@
   <title>Document</title>
 </head>
 <body>
-  <ol id="message-container"></ol>
-  <input id="message-input">
-  <button id="send-message">Send Message</button>
-  <button id="delete-messages">Delete All</button>
+  <ol></ol>
+  <input>
+  <button>Add to list</button>
   <script type="module">
-    
-    //     Join the Discord for additional help :)
-    //     https://discord.com/invite/qqc65cEUhy
-    
     // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
-    import { getDatabase, ref, set, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getDatabase, set, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
-
+  
     // Your web app's Firebase configuration
     const firebaseConfig = {
-      apiKey: "GGJTlxMnj9S8DrEEEToa4yoGBKoXAzisQIvDSdG",
-      authDomain: "example.firebaseapp.com",
-      projectId: "example-id",
-      storageBucket: "example.appspot.com",
-      messagingSenderId: "123456789123",
-      appId: "1:123456789123:web:123456789123abcde"
+      apiKey: "AIzaSyCDsuxF3V4c3AL35KcxD-y5D85m5TnNWKI",
+      authDomain: "todo-7266d.firebaseapp.com",
+      projectId: "todo-7266d",
+      storageBucket: "todo-7266d.appspot.com",
+      messagingSenderId: "259462034082",
+      appId: "1:259462034082:web:f5ecc6d814d8dfe27b1dfb"
     };
-
+  
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    const container = document.getElementById('message-container');
-    const input = document.getElementById("message-input");
-    const send = document.getElementById("send-message");
+    const ol = document.querySelector("ol");
+    const input = document.querySelector("input");
+    const button = document.querySelector("button");
 
-    send.addEventListener("click", () => {
+    button.onclick = () => {
       const text = input.value;
       input.value = "";
 
-      const key = push(ref(database, "chat_one")).key;
-      set(ref(database, "chat_one/" + key), {
+      const key = push(ref(database, "list")).key;
+      set(ref(database, "list/" + key), {
         content: text
       });
-    });
+    };
 
-    onChildAdded(ref(database, "chat_one"), (child) => {
+    onChildAdded(ref(database, "list"), (child) => {
+      const item = child.val();
       const li = document.createElement("li");
-      li.textContent = child.val().content;
-      container.append(li);
-    });
-
-
-    const button2 = document.getElementById("delete-messages");
-    button2.addEventListener("click", () => {
-      set(ref(database, "chat_one"), null);
-    });
+      li.innerText = item.content;
+      ol.append(li);
+    })
   </script>
 </body>
 </html>
